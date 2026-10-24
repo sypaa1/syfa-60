@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syfa 60</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1F6F6B">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,700;1,500&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F5F3;--card:#FFFFFF;--ink:#1D2A2C;--mute:#5E6E70;--line:#D8E0DD;--accent:#1F6F6B;--accent-ink:#FFFFFF;--gold:#B07A1F}
+@media (prefers-color-scheme:dark){:root{--bg:#121A1B;--card:#1B2527;--ink:#E7EEEC;--mute:#9AABAA;--line:#2D3B3D;--accent:#58B5AE;--accent-ink:#0E1717;--gold:#E0B25A}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,system-ui,sans-serif;padding-bottom:84px}
+.wrap{max-width:680px;margin:0 auto;padding:24px 18px}
+h1,h2,h3{font-family:Newsreader,Georgia,serif;line-height:1.2;margin:0}
+h1{font-size:2rem}
+h2{font-size:1.45rem;margin:32px 0 10px}
+h3{font-size:1.1rem}
+p{margin:0 0 10px}
+.mute{color:var(--mute);font-size:.92rem}
+.hidden{display:none}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+nav button{flex:1;max-width:240px;padding:10px;border:0;border-radius:12px;background:transparent;color:var(--mute);font:inherit;font-weight:700;cursor:pointer}
+nav button[aria-current=page]{background:var(--accent);color:var(--accent-ink)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.streak{text-align:right}
+.streak b{font:700 2.4rem/1 Newsreader,serif;color:var(--accent)}
+.quote{margin:22px 0;padding:16px 18px;border-left:4px solid var(--gold);background:var(--card);border-radius:0 12px 12px 0;font:italic 500 1.12rem/1.5 Newsreader,serif}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin:6px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.domain{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:14px 16px;margin:14px 0}
+.habit{display:flex;gap:12px;align-items:center;padding:8px 0;cursor:pointer}
+.habit input{width:22px;height:22px;accent-color:var(--c);flex:none}
+textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+textarea{resize:vertical;min-height:54px;margin-top:6px}
+.link{border:2px solid var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}
+.chips li{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 14px}
+.chips.soft li{border-style:dashed}
+.ms{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:10px 0}
+.ms .row{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.ms select{width:auto}
+.ms.sedang{border-color:var(--gold)}
+.ms.tercapai{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--card))}
+.tokoh{padding:10px 0;border-bottom:1px solid var(--line)}
+.tokoh:last-child{border:0}
+.btn{padding:10px 16px;border-radius:10px;border:1px solid var(--accent);background:transparent;color:var(--accent);font:inherit;font-weight:700;cursor:pointer;margin:4px 8px 4px 0}
+.saved{position:fixed;top:12px;right:12px;background:var(--accent);color:var(--accent-ink);padding:6px 14px;border-radius:999px;font-size:.85rem;opacity:0;transition:opacity .25s;pointer-events:none}
+.saved.on{opacity:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.stat b{display:block;font:700 1.9rem/1.1 Newsreader,serif;color:var(--accent)}
+.seg{display:flex;gap:8px;margin:8px 0}
+.seg button{padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.radar{width:100%;max-width:380px;display:block;margin:0 auto}
+.radar .g{fill:none;stroke:var(--line)}
+.radar .d{fill:var(--accent);fill-opacity:.25;stroke:var(--accent);stroke-width:2.5}
+.radar text{fill:var(--ink);font:600 13px Figtree,sans-serif}
+.dm{display:flex;align-items:center;gap:10px;margin:8px 0}
+.dm span:first-child{width:96px;flex:none}
+.dm .bar{flex:1;margin:0}
+.dm .bar i{background:var(--c)}
+.dm span:last-child{width:44px;text-align:right}
+.week{display:flex;gap:8px;align-items:flex-end;height:120px;margin:10px 0}
+.week div{flex:1;text-align:center;font-size:.8rem;color:var(--mute);display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.week i{display:block;background:var(--accent);border-radius:6px 6px 0 0;min-height:3px;margin-bottom:4px}
+.week .off i{background:var(--line)}
+.recap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="saved" id="saved" role="status">Tersimpan</div>
+
+<main class="wrap">
+  <section id="p-today"></section>
+  <section id="p-prog" class="hidden"></section>
+  <section id="p-life" class="hidden"></section>
+</main>
+
+<nav aria-label="Menu utama">
+  <button data-go="today" aria-current="page">Hari Ini</button>
+  <button data-go="prog">Progres</button>
+  <button data-go="life">Pegangan Hidup</button>
+</nav>
+
+<script>
+/* ============ ISI: edit bagian ini kapan saja ============ */
+const KONTRIBUSI = "Pada umur 40 tahun saya akan mendirikan perpustakaan dan mengajar di sana untuk anak-anak di kampung saya, sehingga mereka tumbuh sadar akan pentingnya pendidikan.";
+
+const DOMAINS = [
+  {id:"emo", nama:"Emosional", warna:"#8A4A78", habits:[
+    ["emo1","Jurnal 3 kalimat: apa yang kurasakan hari ini"],
+    ["emo2","Satu hal yang kusyukuri"]]},
+  {id:"fis", nama:"Fisik", warna:"#1F6F6B", habits:[
+    ["fis1","Gerak badan 15 menit"],
+    ["fis2","Tidur tepat waktu"]]},
+  {id:"int", nama:"Intelektual", warna:"#2F5D8A", habits:[
+    ["int1","Baca 10 halaman"],
+    ["int2","Menulis 100 kata"]]},
+  {id:"kar", nama:"Karir", warna:"#B07A1F", habits:[
+    ["kar1","Satu langkah kecil menuju kontribusi"],
+    ["kar2","Catat satu hal yang kupelajari"]]},
+  {id:"spi", nama:"Spiritual", warna:"#3E7A4B", habits:[
+    ["spi1","Salat tepat waktu"],
+    ["spi2","Baca atau tadabbur Al-Qur’an sebentar"]]}
+];
+
+const HIDUP = {
+  bakat:["Merangkai kata (menulis)","Mengamati detail dan membaca data/statistik","Menyusun rencana secara terstruktur","Belajar dan menganalisis dengan cepat"],
+  minat:["Membaca","Menulis","Menyusun rencana harian","Menonton"],
+  coba:["Public speaking","Membuat konten","Mengajar"],
+  bidang:["Lingkungan (climate change)","Pendidikan"],
+  alasan:"Di sekitarku masih banyak yang berhenti di SMP/SMA dan belum sadar pentingnya pendidikan.",
+  korban:["Pindah kota","Waktu santai berkurang","Penghasilan awal kecil"],
+  milestones:[
+    ["20–25","Bekerja, lanjut S2","Menulis rutin, mengajar di Sakola Kembara, mulai mengumpulkan buku"],
+    ["26–30","Fokus ke keluarga","Tetap menulis dan mengumpulkan buku dalam skala kecil"],
+    ["31–35","Menerbitkan buku","Tulisan rutin jadi bahan buku"],
+    ["36–40","Mendirikan perpustakaan dan mengajar","Koleksi buku dan pengalaman mengajar jadi modal"],
+    ["41–50","Mendirikan book cafe","Penopang perpustakaan"],
+    ["51–60","Fokus ibadah",""]],
+  tokoh:[
+    ["Anies Rasyid Baswedan","Pendidikan dan kepemimpinan"],
+    ["Giava Zahrannisa","Prestasi akademik"],
+    ["Dena Haura","Konten estetik dan cerita hijrah"],
+    ["Alif (Negeri 5 Menara)","Menggapai mimpi"]]
+};
+
+/* ============ DATA ============ */
+const KEY = "syfa60-v1";
+let db = {days:{}, ms:{}};
+try { const r = localStorage.getItem(KEY); if (r) db = JSON.parse(r); } catch(e){}
+db.days = db.days || {}; db.ms = db.ms || {};
+
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(db)); } catch(e){ alert("Data tidak bisa disimpan di browser ini. Pakai tombol Simpan cadangan."); return; }
+  const s = document.getElementById("saved"); s.classList.add("on");
+  clearTimeout(save.t); save.t = setTimeout(()=>s.classList.remove("on"),900);
+}
+const pad = n => String(n).padStart(2,"0");
+const keyOf = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today = keyOf(new Date());
+function day(k){ return db.days[k] || (db.days[k] = {c:{}, n:{}, k:""}); }
+function active(k){ const d = db.days[k]; return !!d && (Object.values(d.c).some(Boolean) || (d.k||"").trim() !== ""); }
+function streak(){
+  const d = new Date(); if (!active(keyOf(d))) d.setDate(d.getDate()-1);
+  let n = 0; while (active(keyOf(d))) { n++; d.setDate(d.getDate()-1); } return n;
+}
+const TOTAL = DOMAINS.reduce((a,d)=>a+d.habits.length,0);
+const li = a => a.map(x=>"<li>"+x+"</li>").join("");
+
+/* ============ HARI INI ============ */
+function renderToday(){
+  const d = day(today);
+  const tgl = new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  document.getElementById("p-today").innerHTML =
+   `<div class="top"><div><h1>Hari ini</h1><p class="mute">${tgl}</p></div>
+      <div class="streak"><b id="streak">0</b><div class="mute">hari berturut-turut</div></div></div>
+    <p class="quote">${KONTRIBUSI}</p>
+    <div><span class="mute" id="prog"></span><div class="bar"><i id="barfill"></i></div></div>` +
+   DOMAINS.map(m=>`<section class="domain" style="--c:${m.warna}"><h3>${m.nama}</h3>` +
+      m.habits.map(h=>`<label class="habit"><input type="checkbox" data-h="${h[0]}" ${d.c[h[0]]?"checked":""}><span>${h[1]}</span></label>`).join("") +
+      `<textarea data-n="${m.id}" rows="2" placeholder="Catatan singkat (opsional)">${""}</textarea></section>`).join("") +
+   `<section class="domain link" style="--c:var(--accent)"><h3>Hari ini apa yang kulakukan untuk kontribusi unggulanku?</h3>
+      <textarea data-k rows="3" placeholder="Tulis satu atau dua kalimat"></textarea></section>`;
+  document.querySelectorAll("[data-n]").forEach(t=>t.value = d.n[t.dataset.n]||"");
+  document.querySelector("[data-k]").value = d.k||"";
+  refreshStats();
+}
+function refreshStats(){
+  const d = day(today), done = Object.values(d.c).filter(Boolean).length;
+  document.getElementById("prog").textContent = done+" dari "+TOTAL+" kebiasaan selesai";
+  document.getElementById("barfill").style.width = (done/TOTAL*100)+"%";
+  document.getElementById("streak").textContent = streak();
+}
+document.getElementById("p-today").addEventListener("input", e=>{
+  const t = e.target, d = day(today);
+  if (t.dataset.h) d.c[t.dataset.h] = t.checked;
+  else if (t.dataset.n) d.n[t.dataset.n] = t.value;
+  else if ("k" in t.dataset) d.k = t.value;
+  save(); refreshStats();
+});
+
+/* ============ PEGANGAN HIDUP ============ */
+const STATUS = [["belum","Belum"],["sedang","Sedang dijalani"],["tercapai","Tercapai"]];
+function renderLife(){
+  const H = HIDUP;
+  document.getElementById("p-life").innerHTML =
+   `<h1>Jika Syfa hidup 60 tahun</h1><p class="mute">Rancangan kontribusi unggulan</p>
+    <p class="quote">${KONTRIBUSI}</p>
+    <h2>Bakat</h2><ul class="chips">${li(H.bakat)}</ul>
+    <h2>Minat</h2><ul class="chips">${li(H.minat)}</ul>
+    <p class="mute" style="margin-top:12px">Ingin dicoba</p><ul class="chips soft">${li(H.coba)}</ul>
+    <h2>Bidang strategis</h2><ul class="chips">${li(H.bidang)}</ul>
+    <p style="margin-top:12px">${H.alasan}</p>
+    <p class="mute">Siap menanggung:</p><ul class="chips soft">${li(H.korban)}</ul>
+    <h2>Milestones</h2>` +
+   H.milestones.map((m,i)=>{
+     const s = db.ms[i]||"belum";
+     return `<div class="ms ${s}"><div class="row"><div><h3>${m[0]} tahun</h3><div>${m[1]}</div></div>
+       <select data-ms="${i}" aria-label="Status ${m[0]}">${STATUS.map(x=>`<option value="${x[0]}" ${x[0]===s?"selected":""}>${x[1]}</option>`).join("")}</select></div>
+       ${m[2]?`<p class="mute" style="margin:8px 0 0">${m[2]}</p>`:""}</div>`;}).join("") +
+   `<h2>Tokoh panutan</h2><div class="ms">` +
+   H.tokoh.map(t=>`<div class="tokoh"><b>${t[0]}</b><div class="mute">${t[1]}</div></div>`).join("") + `</div>
+    <h2>Cadangan data</h2>
+    <p class="mute">Datamu tersimpan di browser ini. Simpan cadangan secara berkala, terutama sebelum ganti HP.</p>
+    <button class="btn" id="exp">Simpan cadangan</button>
+    <button class="btn" id="imp">Pulihkan dari cadangan</button>
+    <input type="file" id="file" accept=".json" class="hidden">`;
+}
+document.getElementById("p-life").addEventListener("change", e=>{
+  if (e.target.dataset.ms !== undefined){ db.ms[e.target.dataset.ms] = e.target.value; save(); renderLife(); }
+  if (e.target.id === "file" && e.target.files[0]){
+    const r = new FileReader();
+    r.onload = ()=>{ try{ const x = JSON.parse(r.result); if(!x.days) throw 0; db = x; save(); renderLife(); renderToday(); alert("Data berhasil dipulihkan."); }catch(err){ alert("File cadangan tidak valid."); } };
+    r.readAsText(e.target.files[0]);
+  }
+});
+document.getElementById("p-life").addEventListener("click", e=>{
+  if (e.target.id === "exp"){
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+    a.download = "syfa60-cadangan-"+today+".json"; a.click();
+  }
+  if (e.target.id === "imp") document.getElementById("file").click();
+});
+
+/* ============ PROGRES ============ */
+let rentang = 7;
+function keysBack(n){ const a=[], d=new Date(); for(let i=0;i<n;i++){ a.push(keyOf(d)); d.setDate(d.getDate()-1);} return a; }
+function span(n){
+  const ks = Object.keys(db.days).filter(active).sort(); if(!ks.length) return n;
+  const diff = Math.round((new Date(today+"T00:00:00")-new Date(ks[0]+"T00:00:00"))/864e5)+1;
+  return Math.max(1,Math.min(n,diff));
+}
+function bestStreak(){
+  const ks = Object.keys(db.days).filter(active).sort(); if(!ks.length) return 0;
+  const d = new Date(ks[0]+"T00:00:00"), end = new Date(today+"T00:00:00"); let best=0, cur=0;
+  while(d<=end){ if(active(keyOf(d))){cur++; best=Math.max(best,cur);} else cur=0; d.setDate(d.getDate()+1); }
+  return best;
+}
+function pctDomain(m,n){
+  const days = span(n); let done=0;
+  keysBack(days).forEach(k=>{ const d=db.days[k]; if(d) m.habits.forEach(h=>{ if(d.c[h[0]]) done++; }); });
+  return Math.round(done/(m.habits.length*days)*100);
+}
+function radar(vals){
+  const cx=160, cy=150, R=90, pt=(i,r)=>{ const a=(-90+i*72)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
+  const poly=r=>DOMAINS.map((_,i)=>pt(i,r).join(",")).join(" ");
+  let g=[25,50,75,100].map(p=>`<polygon class="g" points="${poly(R*p/100)}"/>`).join("");
+  g+=DOMAINS.map((_,i)=>`<line class="g" x1="${cx}" y1="${cy}" x2="${pt(i,R)[0]}" y2="${pt(i,R)[1]}"/>`).join("");
+  const data=vals.map((v,i)=>pt(i,R*Math.max(v,3)/100).join(",")).join(" ");
+  const lab=DOMAINS.map((m,i)=>{ const p=pt(i,R+24); const a=i===0?"middle":(p[0]>cx?"start":"end"); return `<text x="${p[0]}" y="${p[1]+4}" text-anchor="${a}">${m.nama}</text>`; }).join("");
+  return `<svg class="radar" viewBox="0 0 320 300" role="img" aria-label="Grafik radar lima domain">${g}<polygon class="d" points="${data}"/>${lab}</svg>`;
+}
+function renderProgress(){
+  const vals = DOMAINS.map(m=>pctDomain(m,rentang));
+  const days = span(rentang), keys = keysBack(days);
+  const aktif = keys.filter(active).length;
+  const selesai = keys.reduce((a,k)=>a+(db.days[k]?Object.values(db.days[k].c).filter(Boolean).length:0),0);
+  const pctAll = Math.round(selesai/(TOTAL*days)*100);
+  const kontrib = keys.filter(k=>db.days[k]&&(db.days[k].k||"").trim()).length;
+  const mulai = Object.keys(db.days).some(active);
+  const hr = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
+  const week = keysBack(7).reverse().map(k=>{
+    const d=db.days[k], n=d?Object.values(d.c).filter(Boolean).length:0;
+    return `<div class="${n?"":"off"}"><i style="height:${n/TOTAL*100}%"></i>${hr[new Date(k+"T00:00:00").getDay()]}</div>`; }).join("");
+  let teks;
+  if(!mulai) teks="Belum ada data. Centang satu kebiasaan di halaman Hari Ini, lalu kembali ke sini.";
+  else {
+    const hi=vals.indexOf(Math.max(...vals)), lo=vals.indexOf(Math.min(...vals));
+    teks=`Dalam ${rentang===7?"7":"30"} hari terakhir kamu aktif ${aktif} dari ${days} hari dan menyelesaikan ${pctAll}% kebiasaan. `+
+      `Kamu menulis tentang kontribusi di ${kontrib} hari. `+
+      (hi!==lo?`Domain terkuat: ${DOMAINS[hi].nama} (${vals[hi]}%). Paling tertinggal: ${DOMAINS[lo].nama} (${vals[lo]}%).`:"");
+  }
+  document.getElementById("p-prog").innerHTML =
+   `<h1>Progres</h1>
+    <div class="stats">
+      <div class="stat"><b>${streak()}</b><span class="mute">streak sekarang</span></div>
+      <div class="stat"><b>${bestStreak()}</b><span class="mute">streak terbaik</span></div>
+      <div class="stat"><b>${aktif}</b><span class="mute">hari aktif</span></div></div>
+    <div class="seg" role="group" aria-label="Rentang waktu">
+      <button data-r="7" aria-pressed="${rentang===7}">7 hari</button>
+      <button data-r="30" aria-pressed="${rentang===30}">30 hari</button></div>
+    <h2>Keseimbangan lima domain</h2>${radar(vals)}
+    <div style="margin-top:10px">`+DOMAINS.map((m,i)=>`<div class="dm" style="--c:${m.warna}"><span>${m.nama}</span><div class="bar"><i style="width:${vals[i]}%"></i></div><span>${vals[i]}%</span></div>`).join("")+`</div>
+    <h2>Seminggu terakhir</h2><div class="week" aria-label="Jumlah kebiasaan selesai per hari">${week}</div>
+    <h2>Rekap</h2><p class="recap">${teks}</p>`;
+}
+document.getElementById("p-prog").addEventListener("click", e=>{
+  if(e.target.dataset.r){ rentang=+e.target.dataset.r; renderProgress(); }
+});
+
+/* ============ NAVIGASI ============ */
+const HALAMAN = {today:"p-today", prog:"p-prog", life:"p-life"};
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.removeAttribute("aria-current"));
+  b.setAttribute("aria-current","page");
+  for(const k in HALAMAN) document.getElementById(HALAMAN[k]).classList.toggle("hidden", k!==b.dataset.go);
+  if(b.dataset.go==="prog") renderProgress();
+  window.scrollTo(0,0);
+}));
+
+renderToday(); renderLife(); renderProgress();
+
+if ("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost" || location.hostname==="127.0.0.1"))
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
